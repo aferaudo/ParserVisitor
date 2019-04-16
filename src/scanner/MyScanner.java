@@ -11,6 +11,7 @@ public class MyScanner {
 		this.toValidate = toValidate;
 		
 		this.scanner = new Scanner(this.toValidate);
+
 	}
 	
 	

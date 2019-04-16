@@ -122,8 +122,13 @@ public class MyFirstEvaluator {
 				currentToken = scanner.getNextToken();
 				print("parsePow", "nextToken");
 				int p2 = parseFactor();
+				int res;
+				for (res=1;p2>0;p2--){
+					res = res*p1;
+				}
 				
-				return (int)Math.pow(p1, p2);
+				p1 = res;
+				return p1;
 			}else
 				return p1;
 		}

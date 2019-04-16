@@ -80,7 +80,11 @@ public class EvalExpVisitor implements ExpVisitor{
 		e.getRight().accept(this); // recupero il valore dell'operando destro
 		int v2 = getResult(); // lo conservo
 		
-		value = (int) Math.pow(v1,v2);
+		int res;
+		for (res=1;v2>0;v2--){
+			res = res*v1;
+		}
+		value = res;
 	}
 
 }
