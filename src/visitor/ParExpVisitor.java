@@ -1,14 +1,18 @@
 package visitor;
 
+import ast.AssignExp;
 import ast.DivExp;
+import ast.LIdentExp;
 import ast.MinusExp;
 import ast.MulExp;
 import ast.NumExp;
 import ast.OpExp;
 import ast.PlusExp;
 import ast.PowExp;
+import ast.RIdentExp;
+import ast.SeqExp;
 
-public class ParExpVisitor implements ExpVisitor{
+public class ParExpVisitor implements ExpAssignVisitor, ExpSeqAssignVisitor{
 
 	public String curs = "";
 	
@@ -53,6 +57,27 @@ public class ParExpVisitor implements ExpVisitor{
 
 	@Override
 	public void visit(PowExp e) {
+		visitOpExp(e);
+	}
+
+	@Override
+	public void visit(AssignExp e) {
+		visitOpExp(e);
+		
+	}
+
+	@Override
+	public void visit(LIdentExp e) {
+		curs = e.getName();
+	}
+
+	@Override
+	public void visit(RIdentExp e) {
+		curs = e.getName();
+	}
+
+	@Override
+	public void visit(SeqExp e) {
 		visitOpExp(e);
 	}
 

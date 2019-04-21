@@ -9,7 +9,7 @@ import javafx.scene.control.TreeItem;
  * @author angeloferaudo
  *
  */
-public class TreeExpVisitor implements ExpVisitor{
+public class TreeExpVisitor implements ExpAssignVisitor, ExpSeqAssignVisitor{
 	
 	TreeItem <String> result = new TreeItem<String>(); 
 	
@@ -20,24 +20,6 @@ public class TreeExpVisitor implements ExpVisitor{
 	public void visitOpExp(OpExp e) {
 	
 			TreeItem<String> temporary = new TreeItem<String>(e.myOp());
-//			
-//			e.getLeft().accept(this);
-//			temporary1 = result;
-//			temporary1.setValue(result.getValue());
-//			
-//			e.getRight().accept(this);
-//			TreeItem<String> temporary2 = new TreeItem<String>();
-//			temporary2 = result;
-//			temporary2.setValue(result.getValue());
-//			
-//			//result.getChildren().add(temporary);
-//			result.setValue(e.myOp());
-//			result.getChildren().add(temporary1);
-//			result.getChildren().add(temporary2);
-			/*
-			 * Cerca di attaccare i sotto alberi
-			 * 
-			 * */
 			
 			e.getLeft().accept(this);
 			temporary.getChildren().add(result);
@@ -78,6 +60,26 @@ public class TreeExpVisitor implements ExpVisitor{
 
 	@Override
 	public void visit(PowExp e) {
+		visitOpExp(e);
+	}
+
+	@Override
+	public void visit(AssignExp e) {
+		visitOpExp(e);
+	}
+
+	@Override
+	public void visit(LIdentExp e) {
+		result.setValue(e.getName());
+	}
+
+	@Override
+	public void visit(RIdentExp e) {
+		result.setValue(e.getName());
+	}
+
+	@Override
+	public void visit(SeqExp e) {
 		visitOpExp(e);
 	}
 

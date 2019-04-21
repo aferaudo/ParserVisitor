@@ -23,7 +23,16 @@ public class Token {
 		return tk;
 	}
 
-
+	/**
+	 * Questo metodo verifica se il token così aggeregato è un identificatore
+	 * 
+	 * un'identificatore può contenere sia lettere che numeri!
+	 * Quindi è semplicemente un !isNumber
+	 * @return
+	 */
+	public boolean isIdentifier() {
+		return !isNumber() && !tk.equals(",") && !tk.equals("$");
+	}
 
 	@Override
 	public boolean equals(Object obj) {

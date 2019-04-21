@@ -1,12 +1,16 @@
 package parser;
 
+import ast.AssignExp;
 import ast.DivExp;
 import ast.Exp;
+import ast.LIdentExp;
 import ast.MinusExp;
 import ast.MulExp;
 import ast.NumExp;
 import ast.PlusExp;
 import ast.PowExp;
+import ast.RIdentExp;
+import ast.SeqExp;
 import scanner.MyScanner;
 import scanner.Token;
 
@@ -25,6 +29,17 @@ public class AstGenerator {
 	 * Dovrò fare una classe per ognuna di essi, considerando che il num non è un operatore ma un numero.
 	 * 
 	 * Conclusioni --> DALLA NOSTRA ESPRESSIONE DA VALIDARE OTTENIAMO IL NOSTRO ALBERO SINTATTICO
+	 * 
+	 * VERSIONE 0.0
+	 * */
+	
+	/*
+	 * UPGRADE --> VERSIONE 0.1
+	 * Aggiunta dell'operatore assegnamento
+	 * EXP ::= ASSIGN
+	 * ASSIGN ::= IDENT = EXP
+	 * 
+	 * FACTOR ::= $IDENT
 	 * */
 	
 	private MyScanner scanner;
@@ -36,6 +51,26 @@ public class AstGenerator {
 	}
 	
 
+	/*Versione 0.1: Introdotta la possibilità di inserire variabili in sequenza*/
+	public Exp parseSeq() {
+		print("parseSeq", "currentToken");
+		Exp result1 = parseExp();
+		print("parseSeq", "nextToken");
+		while(currentToken != null) {
+			if(currentToken.equals(",")) {
+				print("parseSeq", "currentToken");
+				currentToken = scanner.getNextToken();
+				Exp result2 = parseExp();
+				print("parseSeq", "nextToken");
+				if(result2 != null)
+					result1 = new SeqExp(result1, result2);
+				else
+					return null;
+			}
+		}
+		return result1;
+	}
+	
 	public Exp parseExp() {
 		print("parseExp", "currentToken");
 		Exp result1 = parseTerm();
@@ -63,6 +98,20 @@ public class AstGenerator {
 				
 				result1 = new MinusExp(result1, result2);
 				
+			}else if(currentToken.isIdentifier()) { // Versione 0.1
+				String id = currentToken.getTk();
+				print("parseExp", "currentToken");
+				result1 = new LIdentExp(id);
+				currentToken = scanner.getNextToken();
+				print("parseExp", "currentToken");
+				if(!currentToken.equals("="))
+					return null;
+				
+				currentToken = scanner.getNextToken();
+				print("parseExp", "currentToken");
+				Exp result2 = parseExp();
+				print("parseExp", "nextToken");
+				return new AssignExp(result1, result2);
 			}else
 				return result1;
 				
@@ -157,8 +206,20 @@ public class AstGenerator {
 				currentToken = scanner.getNextToken();
 				print("parseFactor", "nextToken");
 				return result;
+			}else if(currentToken.equals("$")) { // Versione 0.1
+				
+				print("parseFactor", "currentToken");
+				currentToken = scanner.getNextToken();
+				print("parseFactor", "nextToken");
+				String id = currentToken.getTk();
+				
+				currentToken = scanner.getNextToken();
+				print("parseFactor", "nextToken");
+				
+				return new RIdentExp(id);
+				
 			}else
-				throw new IllegalArgumentException();
+				return null;
 	}
 	
 	private void print(String who, String type) {
